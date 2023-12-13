@@ -49,5 +49,10 @@ namespace Services
             }
             return listPersonsResponse;
         }
+
+        public PersonResponse? GetPersonById(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

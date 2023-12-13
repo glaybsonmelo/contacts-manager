@@ -8,10 +8,12 @@ namespace CRUDTests
     public class PersonsServiceTest
     {
         private readonly IPersonsService _personsService;
+        private readonly ICountriesService _countriesService;
 
         public PersonsServiceTest()
         {
             _personsService = new PersonService();
+            _countriesService = new CountriesService();
         }
 
         #region AddPerson
@@ -89,6 +91,55 @@ namespace CRUDTests
         }
 
         #endregion
+        #region GetPersonById
 
+
+        // if we supply null as person id, it should return null as PersonResponse
+        [Fact]
+        public void GetPersonById_NullId()
+        {
+            // Arrange
+            Guid? personId = null;
+
+            // Act
+            PersonResponse? person_response_from_get = _personsService.GetPersonById(personId);
+
+            // Assert
+            Assert.Null(person_response_from_get);
+        }
+
+        // if we supply a valid person id, it should return the valid person details as PersonResponse 
+        [Fact]
+        public void GetPersonById_ValidId()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                Name = "Brazil"
+            };
+            CountryResponse countryResponse = _countriesService.AddCountry(countryAddRequest);
+            
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                Name = "MyName",
+                Email = "email@valid.com",
+                Address = "street 101, brooklin",
+                BirthDate = Convert.ToDateTime("07/156/2003"),
+                CountryId = countryResponse.Id,
+                Gender = GenderOptions.Female,
+                ReceiveNewLatters = true,
+
+            };
+            //Act
+            PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);
+            Guid? personId = person_response_from_add.Id;
+
+            PersonResponse? person_response_from_get = _personsService.GetPersonById(personId);
+            //Assert
+            Assert.Equal(person_response_from_add, person_response_from_get);
+
+        }
+
+        #endregion  
     }
 }
