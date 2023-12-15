@@ -31,9 +31,9 @@ namespace ServiceContracts
         /// <summary>
         /// Returns all person object that mathches with the given search field and search string
         /// </summary>
-        /// <param name="searchBy">field to search</param>
-        /// <param name="searchString"></param>
-        /// <returns></returns>
+        /// <param name="searchBy">Search field to search</param>
+        /// <param name="searchString">Search string to search</param>
+        /// <returns>Returns all matching parsons based on the given search field and search string</returns>
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
     }
 }
