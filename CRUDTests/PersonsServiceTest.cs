@@ -9,11 +9,13 @@ namespace CRUDTests
     {
         private readonly IPersonsService _personsService;
         private readonly ICountriesService _countriesService;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public PersonsServiceTest()
+        public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
             _personsService = new PersonService();
             _countriesService = new CountriesService();
+            _testOutputHelper = testOutputHelper;
         }
 
         #region AddPerson
@@ -124,7 +126,7 @@ namespace CRUDTests
                 Name = "MyName",
                 Email = "email@valid.com",
                 Address = "street 101, brooklin",
-                BirthDate = Convert.ToDateTime("07/156/2003"),
+                BirthDate = Convert.ToDateTime("07/16/2003"),
                 CountryId = countryResponse.Id,
                 Gender = GenderOptions.Female,
                 ReceiveNewLatters = true,
@@ -140,6 +142,98 @@ namespace CRUDTests
 
         }
 
-        #endregion  
+        #endregion
+        #region GetAllPersons
+
+        // should return an empty list by default
+        [Fact]
+        public void GetAllPersons_EmptyList()
+        {
+
+            //Act
+            List<PersonResponse> persons_from_get = _personsService.GetAllPersons();
+
+            //Assert
+            Assert.Empty(persons_from_get);
+        }
+
+        //First, we will add few persons; then we call GetAllPersons(); it should returns the same persons that were added
+        [Fact]
+        public void GetAllPersons_NonEmptyList()
+        {
+
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "USA"
+            };
+            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            {
+                Name = "Canada"
+            };
+
+            CountryResponse country_from_add1 = _countriesService.AddCountry(countryAddRequest1);
+            CountryResponse country_from_add2 = _countriesService.AddCountry(countryAddRequest2);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                Name = "Glaybson",
+                Address = "addd",
+                BirthDate = Convert.ToDateTime("07/16/2003"),
+                CountryId = country_from_add1.Id,
+                Email = "valid@email.com",
+                Gender = GenderOptions.Male,
+                ReceiveNewLatters = true,
+            };
+            PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            {
+                Name = "Buula Mota",
+                Address = "address",
+                BirthDate = Convert.ToDateTime("01/6/2000"),
+                CountryId = country_from_add2.Id,
+                Email = "valid2323@email.com",
+                Gender = GenderOptions.Female,
+                ReceiveNewLatters = true,
+            };
+
+            List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
+            {
+                personAddRequest1,
+                personAddRequest2
+            };
+
+            List<PersonResponse> person_response_list_from_add = new List<PersonResponse>();
+
+            foreach (PersonAddRequest person_request in person_requests)
+            {
+                PersonResponse person_response = _personsService.AddPerson(person_request);
+                person_response_list_from_add.Add(person_response);
+            }
+
+            //print person_response_list_from_add
+            _testOutputHelper.WriteLine("Expected: ");
+            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
+            {
+                _testOutputHelper.WriteLine(person_response_from_add.ToString());
+            }
+            
+            //Act
+            List<PersonResponse> persons_response_list_from_get = _personsService.GetAllPersons();
+
+            //print person_response_list_from_get
+            _testOutputHelper.WriteLine("Actual: ");
+            foreach (PersonResponse person_response_from_get in persons_response_list_from_get)
+            {
+                _testOutputHelper.WriteLine(person_response_from_get.ToString());
+            }
+
+            //Assert
+            foreach (PersonResponse person_response in person_response_list_from_add)
+            {
+                Assert.Contains(person_response, persons_response_list_from_get);
+            }
+
+        }
+        #endregion
     }
 }
