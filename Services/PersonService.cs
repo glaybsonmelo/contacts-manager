@@ -3,7 +3,7 @@ using ServiceContracts.DTO;
 using Entities;
 using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
-
+using ServiceContracts.Enums;
 
 namespace Services
 {
@@ -105,6 +105,11 @@ namespace Services
             }
             return matchingPersons;
 
+            throw new NotImplementedException();
+        }
+
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> listPersonsToSort, string? sortBy, SortOrderOptions sortOrder)
+        {
             throw new NotImplementedException();
         }
     }

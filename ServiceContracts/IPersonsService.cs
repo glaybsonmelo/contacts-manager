@@ -1,4 +1,5 @@
 ﻿using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts
 {
@@ -35,5 +36,14 @@ namespace ServiceContracts
         /// <param name="searchString">Search string to search</param>
         /// <returns>Returns all matching parsons based on the given search field and search string</returns>
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
+
+        /// <summary>
+        /// Returns sorted list of persons
+        /// </summary>
+        /// <param name="listPersonsToSort">Represents list of persons to sort</param>
+        /// <param name="sortBy">name of property (key), based on which the persons should be sorted</param>
+        /// <param name="sortOrder">ASC or DESC</param>
+        /// <returns>Return Sorted persons as PersonResponse list</returns>
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> listPersonsToSort, string? sortBy, SortOrderOptions sortOrder);
     }
 }
