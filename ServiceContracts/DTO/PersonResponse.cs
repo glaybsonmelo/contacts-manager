@@ -53,6 +53,10 @@ namespace ServiceContracts.DTO
         {
             return base.GetHashCode();
         }
+        public override string ToString()
+        {
+            return $"Id: {Id}, Name: {Name}, Email: {Email}, BithDate: {BirthDate?.ToString()}, Gender: {Gender}, CountryId: {CountryId}, Country: {Country}, Address: {Address}, ReceiveNewLatters: {ReceiveNewLatters}";
+        }
     }
     public static class PersonExtensions
     {
@@ -77,5 +81,6 @@ namespace ServiceContracts.DTO
                 Age = (person.BirthDate != null) ? Math.Round((DateTime.Now - person.BirthDate).Value.TotalDays / 365.25) : null,
             };
         }
+
     }
 }

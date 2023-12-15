@@ -4,6 +4,7 @@ using Entities;
 using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 
+
 namespace Services
 {
     public class PersonService : IPersonsService
@@ -42,17 +43,21 @@ namespace Services
 
         public List<PersonResponse> GetAllPersons()
         {
-            List<PersonResponse> listPersonsResponse = new List<PersonResponse>();
-            foreach(Person person in _persons)
-            {
-                listPersonsResponse.Add(person.ToPersonResponse());
-            }
-            return listPersonsResponse;
+            return _persons.Select(person => person.ToPersonResponse()).ToList();
         }
 
         public PersonResponse? GetPersonById(Guid? id)
         {
-            throw new NotImplementedException();
+            if(id == null)
+                return null;
+            
+            Person? personFetched = _persons.Find(person => person.Id == id);
+
+            if (personFetched == null)
+                return null;
+
+            return personFetched.ToPersonResponse();
+
         }
     }
 }
