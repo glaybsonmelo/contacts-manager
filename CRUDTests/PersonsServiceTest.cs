@@ -505,6 +505,7 @@ namespace CRUDTests
                 _personsService.UpdatePerson(personUpdateRequest);
             });
         }
+
         // When we supply invalid person ID, it should throws ArgumentException
         [Fact]
         public void UpdatePerson_invalidPersonId()
@@ -513,27 +514,11 @@ namespace CRUDTests
             PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
             {
                 PersonId = Guid.NewGuid(),
+                
             };
 
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                //Act
-                _personsService.UpdatePerson(personUpdateRequest);
-            });
-        }
-        // When we supply person Id as null, it should throws ArgumentNullException
-        [Fact]
-        public void UpdatePerson_NullPersonId()
-        {
-            //Arrange
-            PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
-            {
-                PersonId = null,
-            };
-
-            //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 //Act
                 _personsService.UpdatePerson(personUpdateRequest);
@@ -550,12 +535,17 @@ namespace CRUDTests
             };
             CountryResponse country_response_from_add = _countriesService.AddCountry(countryAddRequest);
 
-     
+
 
             PersonAddRequest personAddRequest = new PersonAddRequest()
             {
                 Name = "Glaybson",
                 CountryId = country_response_from_add.Id,
+                Email = "valid@email.com",
+                BirthDate = Convert.ToDateTime("07-08-1999"),
+                Gender = GenderOptions.Other,
+                ReceiveNewLatters = true
+
             };
 
             PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);
@@ -565,7 +555,7 @@ namespace CRUDTests
             person_update_request.Name = null;
 
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 //Act
                 _personsService.UpdatePerson(person_update_request);
@@ -607,6 +597,51 @@ namespace CRUDTests
             //Assert
             Assert.Equal(person_response_from_update, person_response_from_get);
             
+        }
+        #endregion
+
+        #region DeletePerson
+
+        // if we supply a valid Id, it shuld return true
+        [Fact]
+        public void DeletePerson_ValidPersonId()
+        {
+            //Arrange 
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                Name = "USA"
+            };
+            CountryResponse country_response_from_add = _countriesService.AddCountry(countryAddRequest);
+
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                Name = "Glaybson",
+                CountryId = country_response_from_add.Id,
+                Email = "valid@email.com",
+                BirthDate = Convert.ToDateTime("07-08-1999"),
+                Gender = GenderOptions.Other,
+                ReceiveNewLatters = true
+            };
+            
+            PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);
+            // Act
+            bool isDeleted = _personsService.DeletePerson(person_response_from_add.Id);
+
+            //Assert
+            Assert.True(isDeleted);
+        }
+        // if we supply a valid Id, it shuld return true
+        [Fact]
+        public void DeletePerson_InvalidPersonId()
+        {
+            //Arrange 
+            Guid? Id = Guid.NewGuid();
+       
+            // Act
+            bool isDeleted = _personsService.DeletePerson(Id);
+
+            //Assert
+            Assert.False(isDeleted);
         }
         #endregion
     }

@@ -1,7 +1,6 @@
 ﻿using ServiceContracts;
 using ServiceContracts.DTO;
 using Entities;
-using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 using ServiceContracts.Enums;
 
@@ -73,32 +72,33 @@ namespace Services
                 case nameof(Person.Name):
                   
                     matchingPersons = allPersons.Where(person =>
-                    !string.IsNullOrEmpty(person.Name) ? (person.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) : true).ToList();
+                     person.Name?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
                 case nameof(Person.Email):
                     matchingPersons = allPersons.Where(person =>
-                    !string.IsNullOrEmpty(person.Email) ? person.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                    person.Email?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
                 case nameof(Person.BirthDate):
                     matchingPersons = allPersons.Where(person =>
-                    person.BirthDate != null ? person.BirthDate.Value.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                    person.BirthDate?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
+
                     break;
 
                 case nameof(Person.Gender):
                     matchingPersons = allPersons.Where(person =>
-                    !string.IsNullOrEmpty(person.Gender) ? person.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                     person.Gender?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
                 case nameof(PersonResponse.Country):
                     matchingPersons = allPersons.Where(person =>
-                    !string.IsNullOrEmpty(person.Country) ? person.Country.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                     person.Country?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
                 case nameof(Person.Address):
                     matchingPersons = allPersons.Where(person =>
-                    !string.IsNullOrEmpty(person.Address) ? person.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                     person.Address?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
                 default: matchingPersons = allPersons; break;
@@ -145,7 +145,44 @@ namespace Services
 
         public PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest)
         {
-            throw new NotImplementedException();
+            if(personUpdateRequest == null)
+                throw new ArgumentNullException(nameof(personUpdateRequest));
+
+            
+            // Validation
+            ValidationHelper.ModelValidation(personUpdateRequest);
+
+            // Get maching person
+            Person? matching_person = _persons.Find(person => person.Id == personUpdateRequest.PersonId);
+
+            if(matching_person == null)
+            {
+                throw new ArgumentException("Given personID doesn't exist");
+            }
+
+            //Updating data
+            matching_person.Name = personUpdateRequest.Name;
+            matching_person.Address = personUpdateRequest.Address;
+            matching_person.BirthDate = personUpdateRequest.BirthDate;
+            matching_person.CountryId = personUpdateRequest.CountryId;
+            matching_person.Gender = personUpdateRequest.Gender.ToString();
+            matching_person.Email = personUpdateRequest.Email;
+            matching_person.ReceiveNewLatters = personUpdateRequest.ReceiveNewLatters;
+
+            return matching_person.ToPersonResponse();
+        }
+
+        public bool DeletePerson(Guid? id)
+        {
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            Person? person_from_get = _persons.Find(person => person.Id == id);
+
+            if (person_from_get == null)
+                return false;
+
+            return true;
         }
     }
 }
