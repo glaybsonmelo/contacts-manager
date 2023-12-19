@@ -1,4 +1,5 @@
 ﻿using Entities;
+using ServiceContracts.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,20 @@ namespace ServiceContracts.DTO
         public override string ToString()
         {
             return $"Id: {Id}, Name: {Name}, Email: {Email}, BithDate: {BirthDate?.ToString()}, Gender: {Gender}, CountryId: {CountryId}, Country: {Country}, Address: {Address}, ReceiveNewLatters: {ReceiveNewLatters}";
+        }
+        public PersonUpdateRequest ToPersonUpdateRequest()
+        {
+            return new PersonUpdateRequest()
+            {
+                PersonId = Id,
+                Name = Name,
+                Email = Email,
+                BirthDate = BirthDate,
+                Gender = (GenderOptions) Enum.Parse(typeof(GenderOptions), Gender, true),
+                CountryId = CountryId,
+                Address = Address,
+                ReceiveNewLatters = ReceiveNewLatters,
+            };
         }
     }
     public static class PersonExtensions

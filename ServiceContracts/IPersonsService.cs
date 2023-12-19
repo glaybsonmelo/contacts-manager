@@ -44,6 +44,13 @@ namespace ServiceContracts
         /// <param name="sortBy">name of property (key), based on which the persons should be sorted</param>
         /// <param name="sortOrder">ASC or DESC</param>
         /// <returns>Return Sorted persons as PersonResponse list</returns>
-        public List<PersonResponse> GetSortedPersons(List<PersonResponse> listPersonsToSort, string? sortBy, SortOrderOptions sortOrder);
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string? sortBy, SortOrderOptions sortOrder);
+
+        /// <summary>
+        /// Update the specific person based on the given PersonId
+        /// </summary>
+        /// <param name="personUpdateRequest">Persons details to updated incluing Person Id</param>
+        /// <returns>Returns PersonResponse</returns>
+        public PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
     }
 }

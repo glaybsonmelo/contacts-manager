@@ -1,7 +1,11 @@
-﻿using ServiceContracts;
+﻿using Entities;
+using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using System.Net;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace CRUDTests
 {
@@ -93,6 +97,7 @@ namespace CRUDTests
         }
 
         #endregion
+
         #region GetPersonById
 
 
@@ -143,6 +148,7 @@ namespace CRUDTests
         }
 
         #endregion
+
         #region GetAllPersons
 
         // should return an empty list by default
@@ -235,6 +241,7 @@ namespace CRUDTests
 
         }
         #endregion
+
         #region GetFilteredPersons
 
         // If the search text is empty and search by is "Name", it should return all persons
@@ -480,6 +487,126 @@ namespace CRUDTests
             {
                 Assert.Equal(person_response_list_from_add[i], persons_response_list_from_sort[i]);
             }
+        }
+        #endregion
+
+        #region UpdatePerson
+        // When we supply RequestAddPerson as null, it should throws ArgumentNullException
+        [Fact]
+        public void UpdatePerson_NullPersonUpdateRequest()
+        {
+            //Arrange
+            PersonUpdateRequest? personUpdateRequest = null;
+
+            //Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                //Act
+                _personsService.UpdatePerson(personUpdateRequest);
+            });
+        }
+        // When we supply invalid person ID, it should throws ArgumentException
+        [Fact]
+        public void UpdatePerson_invalidPersonId()
+        {
+            //Arrange
+            PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
+            {
+                PersonId = Guid.NewGuid(),
+            };
+
+            //Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                //Act
+                _personsService.UpdatePerson(personUpdateRequest);
+            });
+        }
+        // When we supply person Id as null, it should throws ArgumentNullException
+        [Fact]
+        public void UpdatePerson_NullPersonId()
+        {
+            //Arrange
+            PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
+            {
+                PersonId = null,
+            };
+
+            //Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                //Act
+                _personsService.UpdatePerson(personUpdateRequest);
+            });
+        }
+        // When person Name is null, it should throws ArgumentNullException
+        [Fact]
+        public void UpdatePerson_PersonNameIsNull()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                Name = "USA",
+            };
+            CountryResponse country_response_from_add = _countriesService.AddCountry(countryAddRequest);
+
+     
+
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                Name = "Glaybson",
+                CountryId = country_response_from_add.Id,
+            };
+
+            PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);
+
+
+            PersonUpdateRequest? person_update_request = person_response_from_add.ToPersonUpdateRequest();
+            person_update_request.Name = null;
+
+            //Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                //Act
+                _personsService.UpdatePerson(person_update_request);
+            });
+        }
+        // First, we will add a new person and try update person name and email
+        [Fact]
+        public void UpdatePerson_PersonFullDetailsUpdation()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                Name = "USA",
+            };
+            CountryResponse country_response_from_add = _countriesService.AddCountry(countryAddRequest);
+
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                Name = "Glaybson",
+                CountryId = country_response_from_add.Id,
+                Address = "Street Abc",
+                BirthDate = Convert.ToDateTime("07-16-2003"),
+                Email = "email@email.com",
+                Gender = GenderOptions.Male,
+                ReceiveNewLatters = true
+
+            };
+
+            PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);
+
+            PersonUpdateRequest? person_update_request = person_response_from_add.ToPersonUpdateRequest();
+            person_update_request.Name = "Glaybson";
+            person_update_request.Email = "valid@email.com";
+    
+            //Act
+            PersonResponse person_response_from_update = _personsService.UpdatePerson(person_update_request);
+            PersonResponse? person_response_from_get = _personsService.GetPersonById(person_response_from_update.Id);
+
+            //Assert
+            Assert.Equal(person_response_from_update, person_response_from_get);
+            
         }
         #endregion
     }

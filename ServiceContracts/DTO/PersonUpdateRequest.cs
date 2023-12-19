@@ -1,15 +1,18 @@
 ﻿using Entities;
 using ServiceContracts.Enums;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ServiceContracts.DTO
 {
-    /// <summary>
-    /// Acts as DTO for inserting a new person
-    /// </summary>
-    public class PersonAddRequest
+    public class PersonUpdateRequest
     {
-
+        [Required(ErrorMessage = "{0} cann't be blank")]
+        public Guid? PersonId { get; set; }
         [Required(ErrorMessage = "{0} cann't be blank")]
         [MinLength(2, ErrorMessage = "Min length is {1}")]
         public string? Name { get; set; }
@@ -30,7 +33,6 @@ namespace ServiceContracts.DTO
         {
             return new Person()
             {
-                Id = PersonId,
                 Name = Name,
                 Email = Email,
                 BirthDate = BirthDate,
