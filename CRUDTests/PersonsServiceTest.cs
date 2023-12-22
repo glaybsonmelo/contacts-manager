@@ -3,9 +3,6 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
-using System.Net;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace CRUDTests
 {
@@ -17,8 +14,8 @@ namespace CRUDTests
 
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _personsService = new PersonService();
-            _countriesService = new CountriesService();
+            _personsService = new PersonService(false);
+            _countriesService = new CountriesService(false);
             _testOutputHelper = testOutputHelper;
         }
 
