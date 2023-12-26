@@ -166,7 +166,7 @@ namespace Services
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _persons.Select(person => person.ToPersonResponse()).ToList();
+            return _persons.Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
         }
 
         public PersonResponse? GetPersonById(Guid? id)
@@ -179,7 +179,7 @@ namespace Services
             if (personFetched == null)
                 return null;
 
-            return personFetched.ToPersonResponse();
+            return ConvertPersonIntoPersonResponse(personFetched);
 
         }
 
@@ -193,24 +193,24 @@ namespace Services
             
             switch(searchBy)
             {
-                case nameof(Person.Name):
+                case nameof(PersonResponse.Name):
                   
                     matchingPersons = allPersons.Where(person =>
                      person.Name?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
-                case nameof(Person.Email):
+                case nameof(PersonResponse.Email):
                     matchingPersons = allPersons.Where(person =>
                     person.Email?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
-                case nameof(Person.BirthDate):
+                case nameof(PersonResponse.BirthDate):
                     matchingPersons = allPersons.Where(person =>
                     person.BirthDate?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
 
                     break;
 
-                case nameof(Person.Gender):
+                case nameof(PersonResponse.Gender):
                     matchingPersons = allPersons.Where(person =>
                      person.Gender?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
@@ -220,7 +220,7 @@ namespace Services
                      person.Country?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
 
-                case nameof(Person.Address):
+                case nameof(PersonResponse.Address):
                     matchingPersons = allPersons.Where(person =>
                      person.Address?.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? true).ToList();
                     break;
@@ -293,7 +293,7 @@ namespace Services
             matching_person.Email = personUpdateRequest.Email;
             matching_person.ReceiveNewLatters = personUpdateRequest.ReceiveNewLatters;
 
-            return matching_person.ToPersonResponse();
+            return ConvertPersonIntoPersonResponse(matching_person);
         }
 
         public bool DeletePerson(Guid? id)
