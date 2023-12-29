@@ -13,7 +13,7 @@ namespace Services
         public PersonService(bool initialize = true)
         {
             _persons = new List<Person>();
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService();
 
             if (initialize)
             {
@@ -310,3 +310,4 @@ namespace Services
         }
     }
 }
+

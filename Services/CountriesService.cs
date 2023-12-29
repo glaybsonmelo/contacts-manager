@@ -83,7 +83,7 @@ namespace Services
 
             Country? country_fetched_from_list = _countries.Find(c => c.Id == id);
 
-            if(country_fetched_from_list == null)
+            if (country_fetched_from_list == null)
             {
                 return null;
             }
