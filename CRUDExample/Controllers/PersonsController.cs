@@ -35,11 +35,6 @@ namespace CRUDExample.Controllers
 
             List<PersonResponse> persons = _personsService.GetFilteredPersons(searchBy, searchString);
 
-            foreach (PersonResponse p in persons)
-            {
-                Console.WriteLine($"coutnries {p.CountryId}");
-            }
-
             List<PersonResponse> sortedPersons = _personsService.GetSortedPersons(persons, sortBy, sortOrder);
          
             ViewBag.CurrentSortBy = sortBy;
@@ -73,6 +68,49 @@ namespace CRUDExample.Controllers
             _personsService.AddPerson(personAddRequest);
 
             return RedirectToAction("index", "Persons");
+        }
+
+        [HttpGet]
+        [Route("[action]/{personId}")]
+        public IActionResult Edit(Guid personId)
+        {
+            PersonResponse? personToEdit= _personsService.GetPersonById(personId);
+
+            if(personToEdit == null)
+            {
+                return RedirectToAction("Index");
+            }
+            PersonUpdateRequest personUpdateRequest = personToEdit.ToPersonUpdateRequest();
+
+            List<CountryResponse> countries = _countriesService.GetAllCountries();
+            ViewBag.Countries = countries.Select(country => new SelectListItem() { Text = country.Name, Value = country.Id.ToString() });
+            new SelectListItem() { Text = "", Value = "" };
+
+            return View(personUpdateRequest);
+        }
+
+        [HttpPost]
+        [Route("[action]/{personId}")]
+        public IActionResult Edit(PersonUpdateRequest personUpdateRequest)
+        {
+            PersonResponse? personFetched = _personsService.GetPersonById(personUpdateRequest.PersonId);
+            
+            if (personFetched == null)
+            {
+                return RedirectToAction("Index", "Persons");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                List<CountryResponse> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries;
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            PersonResponse updatedPerson = _personsService.UpdatePerson(personUpdateRequest);
+
+            return RedirectToAction("Index", "Persons");
         }
     }
 }
