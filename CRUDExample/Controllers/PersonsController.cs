@@ -5,6 +5,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace CRUDExample.Controllers
 {
@@ -105,10 +106,40 @@ namespace CRUDExample.Controllers
                 List<CountryResponse> countries = _countriesService.GetAllCountries();
                 ViewBag.Countries = countries;
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View();
+                return View(personFetched.ToPersonUpdateRequest());
             }
 
             PersonResponse updatedPerson = _personsService.UpdatePerson(personUpdateRequest);
+
+            return RedirectToAction("Index", "Persons");
+        }
+
+        [HttpGet]
+        [Route("[action]/{personId}")]
+        public IActionResult Delete(Guid personId)
+        {
+            PersonResponse? personFound = _personsService.GetPersonById(personId);
+            
+            if (personFound == null)
+            {
+                return RedirectToAction("Index", "Persons");
+            }
+
+            return View(personFound);
+        }
+
+        [HttpPost]
+        [Route("[action]/{personId}")]
+        public IActionResult Delete(PersonResponse personToDelete)
+        {
+            PersonResponse? personFound = _personsService.GetPersonById(personToDelete.Id);
+
+            if(personFound == null)
+            {
+                return RedirectToAction("Index", "Persons");
+            }
+            
+            _personsService.DeletePerson(personToDelete.Id);
 
             return RedirectToAction("Index", "Persons");
         }

@@ -306,6 +306,8 @@ namespace Services
             if (person_from_get == null)
                 return false;
 
+            _persons.Remove(person_from_get);
+
             return true;
         }
     }
