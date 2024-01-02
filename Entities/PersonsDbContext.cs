@@ -9,6 +9,10 @@ namespace Entities
 {
     public class PersonsDbContext : DbContext
     {
+        public PersonsDbContext(DbContextOptions options) : base(options)
+        {
+            
+        }
         public DbSet<Country> Countries { get; set;}
         public DbSet<Person> Persons { get; set;}
 
@@ -19,13 +23,22 @@ namespace Entities
             modelBuilder.Entity<Person>().ToTable("Persons");
 
             // Seed for countries
-
             string countriesJson = System.IO.File.ReadAllText("countries.json");
-            modelBuilder.Entity<Country>().HasData(new Country()
+            List<Country> countries = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
+
+            foreach(Country country in countries)
             {
-                Id = Guid.NewGuid(),
-                Name = "Brazil"
-            });
+                modelBuilder.Entity<Country>().HasData(country);
+            }
+
+            // Seed for persons
+            string personsJson = System.IO.File.ReadAllText("persons.json");
+            List<Person> persons = System.Text.Json.JsonSerializer.Deserialize<List<Person>>(personsJson);
+
+            foreach(Person person in persons)
+            {
+                modelBuilder.Entity<Person>().HasData(person);
+            }
         }
     }
 }
