@@ -17,6 +17,15 @@ namespace Entities
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Country>().ToTable("Countries");
             modelBuilder.Entity<Person>().ToTable("Persons");
+
+            // Seed for countries
+
+            string countriesJson = System.IO.File.ReadAllText("countries.json");
+            modelBuilder.Entity<Country>().HasData(new Country()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Brazil"
+            });
         }
     }
 }
