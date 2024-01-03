@@ -3,6 +3,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDTests
 {
@@ -14,8 +15,16 @@ namespace CRUDTests
 
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _personsService = new PersonService(false);
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService(
+                new PersonsDbContext(
+                    new DbContextOptionsBuilder<PersonsDbContext>().Options
+                    )
+                );
+            _personsService = new PersonService(
+                new PersonsDbContext(
+                    new DbContextOptionsBuilder<PersonsDbContext>().Options
+                    )
+                );
             _testOutputHelper = testOutputHelper;
         }
 
