@@ -35,8 +35,10 @@ namespace Services
 
             person.Id = Guid.NewGuid();
 
-            _db.Persons.Add(person);
-            _db.SaveChanges();
+            //_db.Persons.Add(person);
+            //_db.SaveChanges();
+
+            _db.sp_InsertPerson(person);
 
             return ConvertPersonIntoPersonResponse(person);
         }
@@ -137,8 +139,8 @@ namespace Services
                 (nameof(PersonResponse.Country), SortOrderOptions.ASC) => allPersons.OrderBy(person => person.Country, StringComparer.OrdinalIgnoreCase).ToList(),
                 (nameof(PersonResponse.Country), SortOrderOptions.DESC) => allPersons.OrderByDescending(person => person.Country, StringComparer.OrdinalIgnoreCase).ToList(),
 
-                (nameof(PersonResponse.ReceiveNewLatters), SortOrderOptions.ASC) => allPersons.OrderBy(person => person.ReceiveNewLatters).ToList(),
-                (nameof(PersonResponse.ReceiveNewLatters), SortOrderOptions.DESC) => allPersons.OrderByDescending(person => person.ReceiveNewLatters).ToList(),
+                (nameof(PersonResponse.ReceiveNewsLetters), SortOrderOptions.ASC) => allPersons.OrderBy(person => person.ReceiveNewsLetters).ToList(),
+                (nameof(PersonResponse.ReceiveNewsLetters), SortOrderOptions.DESC) => allPersons.OrderByDescending(person => person.ReceiveNewsLetters).ToList(),
 
                 _ => allPersons
             };
@@ -169,7 +171,7 @@ namespace Services
             matching_person.CountryId = personUpdateRequest.CountryId;
             matching_person.Gender = personUpdateRequest.Gender.ToString();
             matching_person.Email = personUpdateRequest.Email;
-            matching_person.ReceiveNewLatters = personUpdateRequest.ReceiveNewLatters;
+            matching_person.ReceiveNewsLetters = personUpdateRequest.ReceiveNewsLetters;
 
             _db.SaveChanges();
 

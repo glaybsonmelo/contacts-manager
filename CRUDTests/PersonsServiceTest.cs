@@ -89,7 +89,7 @@ namespace CRUDTests
                 CountryId = Guid.NewGuid(),
                 Email = "valid@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
 
             //Act
@@ -140,7 +140,7 @@ namespace CRUDTests
                 BirthDate = Convert.ToDateTime("07/16/2003"),
                 CountryId = countryResponse.Id,
                 Gender = GenderOptions.Female,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
 
             };
             //Act
@@ -195,7 +195,7 @@ namespace CRUDTests
                 CountryId = country_from_add1.Id,
                 Email = "valid@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
             PersonAddRequest personAddRequest2 = new PersonAddRequest()
             {
@@ -205,7 +205,7 @@ namespace CRUDTests
                 CountryId = country_from_add2.Id,
                 Email = "valid2323@email.com",
                 Gender = GenderOptions.Female,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
 
             List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
@@ -276,7 +276,7 @@ namespace CRUDTests
                 CountryId = country_from_add1.Id,
                 Email = "valid@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
             PersonAddRequest personAddRequest2 = new PersonAddRequest()
             {
@@ -286,7 +286,7 @@ namespace CRUDTests
                 CountryId = country_from_add2.Id,
                 Email = "valid2323@email.com",
                 Gender = GenderOptions.Female,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
 
             List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
@@ -353,7 +353,7 @@ namespace CRUDTests
                 CountryId = country_from_add1.Id,
                 Email = "valid@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
             PersonAddRequest personAddRequest2 = new PersonAddRequest()
             {
@@ -363,7 +363,7 @@ namespace CRUDTests
                 CountryId = country_from_add2.Id,
                 Email = "valid2323@email.com",
                 Gender = GenderOptions.Female,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
 
             List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
@@ -440,7 +440,7 @@ namespace CRUDTests
                 CountryId = country_from_add1.Id,
                 Email = "valid@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
             PersonAddRequest personAddRequest2 = new PersonAddRequest()
             {
@@ -450,7 +450,7 @@ namespace CRUDTests
                 CountryId = country_from_add2.Id,
                 Email = "valid2323@email.com",
                 Gender = GenderOptions.Female,
-                ReceiveNewLatters = true,
+                ReceiveNewsLetters = true,
             };
 
             List<PersonAddRequest> person_requests = new List<PersonAddRequest>()
@@ -550,7 +550,7 @@ namespace CRUDTests
                 Email = "valid@email.com",
                 BirthDate = Convert.ToDateTime("07-08-1999"),
                 Gender = GenderOptions.Other,
-                ReceiveNewLatters = true
+                ReceiveNewsLetters = true
 
             };
 
@@ -586,7 +586,7 @@ namespace CRUDTests
                 BirthDate = Convert.ToDateTime("07-16-2003"),
                 Email = "email@email.com",
                 Gender = GenderOptions.Male,
-                ReceiveNewLatters = true
+                ReceiveNewsLetters = true
 
             };
 
@@ -626,7 +626,7 @@ namespace CRUDTests
                 Email = "valid@email.com",
                 BirthDate = Convert.ToDateTime("07-08-1999"),
                 Gender = GenderOptions.Other,
-                ReceiveNewLatters = true
+                ReceiveNewsLetters = true
             };
             
             PersonResponse person_response_from_add = _personsService.AddPerson(personAddRequest);

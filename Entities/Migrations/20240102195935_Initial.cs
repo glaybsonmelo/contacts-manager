@@ -32,7 +32,7 @@ namespace Entities.Migrations
                     Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    ReceiveNewLatters = table.Column<bool>(type: "bit", nullable: false)
+                    ReceiveNewsLetters = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +53,7 @@ namespace Entities.Migrations
 
             migrationBuilder.InsertData(
                 table: "Persons",
-                columns: new[] { "Id", "Address", "BirthDate", "CountryId", "Email", "Gender", "Name", "ReceiveNewLatters" },
+                columns: new[] { "Id", "Address", "BirthDate", "CountryId", "Email", "Gender", "Name", "ReceiveNewsLetters" },
                 values: new object[,]
                 {
                     { new Guid("012107df-862f-4f16-ba94-e5c16886f005"), "413 Sachtjen Way", new DateTime(1990, 9, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("12e15727-d369-49a9-8b13-bc22e9362179"), "hmosco8@tripod.com", "Male", "Hansiain", false },

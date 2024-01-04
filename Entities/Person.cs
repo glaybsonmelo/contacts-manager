@@ -24,6 +24,6 @@ namespace Entities
         public Guid CountryId { get; set; }
         [StringLength(255)]
         public string? Address { get; set; }
-        public bool ReceiveNewLatters { get; set; }
+        public bool ReceiveNewsLetters { get; set; }
     }
 }

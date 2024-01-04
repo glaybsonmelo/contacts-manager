@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities
@@ -40,9 +41,24 @@ namespace Entities
                 modelBuilder.Entity<Person>().HasData(person);
             }
         }
-            public List<Person> sp_GetAllPersons()
+        public List<Person> sp_GetAllPersons()
+        {
+            return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
+        }
+        public int sp_InsertPerson(Person person)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
-            }
+                new SqlParameter("@Id", person.Id),
+                new SqlParameter("@Name", person.Name),
+                new SqlParameter("@Email", person.Email),
+                new SqlParameter("@BirthDate", person.BirthDate),
+                new SqlParameter("@Gender", person.Gender),
+                new SqlParameter("@CountryId", person.CountryId),
+                new SqlParameter("@Address", person.Address),
+                new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
+            };
+            return Database.ExecuteSqlRaw("EXECUTE [dbo].[InsertPerson]@Id, @Name, @Email, @BirthDate, @Gender, @CountryId, @Address, @ReceiveNewsLetters", parameters);
+        }
     }
 }
