@@ -3,6 +3,7 @@ using ServiceContracts.DTO;
 using Entities;
 using Services.Helpers;
 using ServiceContracts.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -15,12 +16,7 @@ namespace Services
             _db = personsDbContext;
             _countriesService = new CountriesService(_db);
         }
-        private PersonResponse ConvertPersonIntoPersonResponse(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = _countriesService.GetCountryById(person.CountryId)?.Name;
-            return personResponse;
-        }
+
         public PersonResponse AddPerson(PersonAddRequest? personAddRequest)
         {
             if (personAddRequest == null)
@@ -40,14 +36,15 @@ namespace Services
 
             _db.sp_InsertPerson(person);
 
-            return ConvertPersonIntoPersonResponse(person);
+            return person.ToPersonResponse();
         }
 
         public List<PersonResponse> GetAllPersons()
         {
             //return _db.Persons.Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
-            
-            return _db.sp_GetAllPersons().Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
+            var persons = _db.Persons.Include("Country").ToList();
+
+            return persons.Select(person => person.ToPersonResponse()).ToList();
         }
 
         public PersonResponse? GetPersonById(Guid? id)
@@ -60,7 +57,7 @@ namespace Services
             if (personFetched == null)
                 return null;
 
-            return ConvertPersonIntoPersonResponse(personFetched);
+            return personFetched.ToPersonResponse();
         }
 
         public List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString)
@@ -175,7 +172,7 @@ namespace Services
 
             _db.SaveChanges();
 
-            return ConvertPersonIntoPersonResponse(matching_person);
+            return matching_person.ToPersonResponse();
         } 
 
         public bool DeletePerson(Guid? id)

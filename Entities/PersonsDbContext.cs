@@ -47,7 +47,17 @@ namespace Entities
                 .HasColumnType("varchar(8)")
                 .HasDefaultValue("ABCD1234");
 
-            modelBuilder.Entity<Person>().HasIndex(person => person.TIN).IsUnique();
+            //  modelBuilder.Entity<Person>().HasIndex(person => person.TIN).IsUnique();
+            modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8");
+
+            // Table Relations
+
+            modelBuilder.Entity<Person>(entity =>
+            {
+                entity.HasOne(c => c.Country)
+                .WithMany(p => p.Persons)
+                .HasForeignKey(p => p.CountryId);
+            });
         }
 
         public List<Person> sp_GetAllPersons()
