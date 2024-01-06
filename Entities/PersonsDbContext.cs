@@ -50,7 +50,7 @@ namespace Entities
         {
             return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
         }
-       /* public int sp_InsertPerson(Person person)
+        public int sp_InsertPerson(Person person)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -64,6 +64,6 @@ namespace Entities
                 new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
             };
             return Database.ExecuteSqlRaw("EXECUTE [dbo].[InsertPerson]@Id, @Name, @Email, @BirthDate, @Gender, @CountryId, @Address, @ReceiveNewsLetters", parameters);
-        }*/
+        }
     }
 }

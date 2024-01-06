@@ -20,7 +20,7 @@ namespace Entities.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             string sp_GetAllPersons = @"
-                DELETE PROCEDURE [dbo].[GetAllPersons]
+                DROP PROCEDURE [dbo].[GetAllPersons]
             ";
             migrationBuilder.Sql(sp_GetAllPersons);
         }
