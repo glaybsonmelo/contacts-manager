@@ -40,10 +40,14 @@ namespace Entities
             {
                 modelBuilder.Entity<Person>().HasData(person);
             }
+
             //  Fluent API
-            modelBuilder.Entity<Country>().Property(country => country.Name)
-                .HasColumnType("nvarchar(255)")
-                .IsRequired();
+            modelBuilder.Entity<Person>().Property(person => person.TIN)
+                .HasColumnName("TaxIdentificationNumber")
+                .HasColumnType("varchar(8)")
+                .HasDefaultValue("ABCD1234");
+
+            modelBuilder.Entity<Person>().HasIndex(person => person.TIN).IsUnique();
         }
 
         public List<Person> sp_GetAllPersons()
