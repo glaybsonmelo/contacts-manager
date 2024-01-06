@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    [Migration("20240104173206_InsertPerson_StoreProcedure")]
-    partial class InsertPerson_StoreProcedure
+    [Migration("20240105151408_GetAllPersons_StoredProcedure")]
+    partial class GetAllPersons_StoredProcedure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,7 +31,8 @@ namespace Entities.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -93,7 +94,7 @@ namespace Entities.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<bool>("ReceiveNewLatters")
+                    b.Property<bool>("ReceiveNewsLetters")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -110,7 +111,7 @@ namespace Entities.Migrations
                             Email = "mwebsdale0@people.com.cn",
                             Gender = "Female",
                             Name = "Marguerite",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = false
                         },
                         new
                         {
@@ -121,7 +122,7 @@ namespace Entities.Migrations
                             Email = "ushears1@globo.com",
                             Gender = "Female",
                             Name = "Ursa",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = false
                         },
                         new
                         {
@@ -132,7 +133,7 @@ namespace Entities.Migrations
                             Email = "fbowsher2@howstuffworks.com",
                             Gender = "Male",
                             Name = "Franchot",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -143,7 +144,7 @@ namespace Entities.Migrations
                             Email = "asarvar3@dropbox.com",
                             Gender = "Male",
                             Name = "Angie",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -154,7 +155,7 @@ namespace Entities.Migrations
                             Email = "ttregona4@stumbleupon.com",
                             Gender = "Gender",
                             Name = "Tani",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = false
                         },
                         new
                         {
@@ -165,7 +166,7 @@ namespace Entities.Migrations
                             Email = "mlingfoot5@netvibes.com",
                             Gender = "Male",
                             Name = "Mitchael",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = false
                         },
                         new
                         {
@@ -176,7 +177,7 @@ namespace Entities.Migrations
                             Email = "mjarrell6@wisc.edu",
                             Gender = "Male",
                             Name = "Maddy",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -187,7 +188,7 @@ namespace Entities.Migrations
                             Email = "pretchford7@virginia.edu",
                             Gender = "Female",
                             Name = "Pegeen",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -198,7 +199,7 @@ namespace Entities.Migrations
                             Email = "hmosco8@tripod.com",
                             Gender = "Male",
                             Name = "Hansiain",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -209,7 +210,7 @@ namespace Entities.Migrations
                             Email = "lwoodwing9@wix.com",
                             Gender = "Male",
                             Name = "Lombard",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = false
                         },
                         new
                         {
@@ -220,7 +221,7 @@ namespace Entities.Migrations
                             Email = "mconachya@va.gov",
                             Gender = "Female",
                             Name = "Minta",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         },
                         new
                         {
@@ -231,7 +232,7 @@ namespace Entities.Migrations
                             Email = "vklussb@nationalgeographic.com",
                             Gender = "Female",
                             Name = "Verene",
-                            ReceiveNewLatters = false
+                            ReceiveNewsLetters = true
                         });
                 });
 #pragma warning restore 612, 618

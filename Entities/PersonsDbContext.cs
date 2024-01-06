@@ -40,12 +40,17 @@ namespace Entities
             {
                 modelBuilder.Entity<Person>().HasData(person);
             }
+            //  Fluent API
+            modelBuilder.Entity<Country>().Property(country => country.Name)
+                .HasColumnType("nvarchar(255)")
+                .IsRequired();
         }
+
         public List<Person> sp_GetAllPersons()
         {
             return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
         }
-        public int sp_InsertPerson(Person person)
+       /* public int sp_InsertPerson(Person person)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -59,6 +64,6 @@ namespace Entities
                 new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
             };
             return Database.ExecuteSqlRaw("EXECUTE [dbo].[InsertPerson]@Id, @Name, @Email, @BirthDate, @Gender, @CountryId, @Address, @ReceiveNewsLetters", parameters);
-        }
+        }*/
     }
 }

@@ -35,10 +35,10 @@ namespace Services
 
             person.Id = Guid.NewGuid();
 
-            //_db.Persons.Add(person);
-            //_db.SaveChanges();
+            _db.Persons.Add(person);
+            _db.SaveChanges();
 
-            _db.sp_InsertPerson(person);
+            //_db.sp_InsertPerson(person);
 
             return ConvertPersonIntoPersonResponse(person);
         }
@@ -46,7 +46,7 @@ namespace Services
         public List<PersonResponse> GetAllPersons()
         {
             //return _db.Persons.Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
-
+            
             return _db.sp_GetAllPersons().Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
         }
 

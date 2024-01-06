@@ -4,7 +4,7 @@
 
 namespace Entities.Migrations
 {
-    public partial class GetPerson_StoredProcedure : Migration
+    public partial class GetAllPersons_StoredProcedure : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,7 +20,7 @@ namespace Entities.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             string sp_GetAllPersons = @"
-                CREATE PROCEDURE [dbo].[GetAllPersons]
+                DELETE PROCEDURE [dbo].[GetAllPersons]
             ";
             migrationBuilder.Sql(sp_GetAllPersons);
         }
