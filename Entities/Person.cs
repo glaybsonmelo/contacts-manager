@@ -29,6 +29,6 @@ namespace Entities
         public string? TIN { get; set; }
 
         [ForeignKey("CountryId")]
-        public Country? Country { get; set; }
+        public virtual Country? Country { get; set; }
     }
 }
