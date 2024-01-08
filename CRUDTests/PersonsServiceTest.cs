@@ -171,9 +171,8 @@ namespace CRUDTests
 
         //First, we will add few persons; then we call GetAllPersons(); it should returns the same persons that were added
         [Fact]
-        public async Task GetAllPersons_NonEmptyList()
+        public async Task GetAllPersons_NonEmptyList() 
         {
-
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
             {
