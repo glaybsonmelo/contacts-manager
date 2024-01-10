@@ -14,6 +14,7 @@ namespace CRUDExample.Controllers
     {
         private readonly IPersonsService _personsService;
         private readonly ICountriesService _countriesService;
+
         public PersonsController(IPersonsService personsService, ICountriesService countriesService)
         {
             _personsService = personsService;
@@ -46,7 +47,7 @@ namespace CRUDExample.Controllers
        
         [Route("[action]")]
         [HttpGet]
-        public async Task<IActionResult> Create()
+        async Task<IActionResult> Create()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
             ViewBag.Countries = countries.Select(country => new SelectListItem() { Text = country.Name, Value = country.Id.ToString() }) ;
@@ -57,7 +58,7 @@ namespace CRUDExample.Controllers
 
         [Route("[action]")]
         [HttpPost]
-        public async Task<IActionResult> Create(PersonAddRequest personAddRequest)
+        async Task<IActionResult> Create(PersonAddRequest personAddRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +74,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("[action]/{personId}")]
-        public async Task<IActionResult> Edit(Guid personId)
+        async Task<IActionResult> Edit(Guid personId)
         {
             PersonResponse? personToEdit = await _personsService.GetPersonById(personId);
 
@@ -92,7 +93,7 @@ namespace CRUDExample.Controllers
 
         [HttpPost]
         [Route("[action]/{personId}")]
-        public async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
+        async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
         {
             PersonResponse? personFetched = await _personsService.GetPersonById(personUpdateRequest.PersonId);
             
@@ -116,7 +117,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("[action]/{personId}")]
-        public async Task<IActionResult> Delete(Guid personId)
+        async Task<IActionResult> Delete(Guid personId)
         {
             PersonResponse? personFound = await _personsService.GetPersonById(personId);
             
@@ -130,7 +131,7 @@ namespace CRUDExample.Controllers
 
         [HttpPost]
         [Route("[action]/{personId}")]
-        public async Task<IActionResult> Delete(PersonResponse personToDelete)
+        async Task<IActionResult> Delete(PersonResponse personToDelete)
         {
             PersonResponse? personFound = await _personsService.GetPersonById(personToDelete.Id);
 
@@ -146,14 +147,14 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("PersonsPDF")]
-        public async Task<IActionResult> PersonsPDF()
+        async Task<IActionResult> PersonsPDF()
         {
             List<PersonResponse> persons = await _personsService.GetAllPersons();
-            return new ViewAsPdf("PersonsPDF", persons, ViewData)
-            {
-                PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+                return new ViewAsPdf("PersonsPDF", persons, ViewData)
+                {
+                    PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+                    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
             };
         }
     }
-}
+};

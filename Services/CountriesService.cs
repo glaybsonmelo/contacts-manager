@@ -8,8 +8,8 @@ namespace Services
 {
     public class CountriesService : ICountriesService
     {
-        private readonly PersonsDbContext _db;
-        public CountriesService(PersonsDbContext personsDbContext)
+        private readonly ApplicationDbContext _db;
+        public CountriesService(ApplicationDbContext personsDbContext)
         {
             _db = personsDbContext;
         }
@@ -26,7 +26,7 @@ namespace Services
 
             int qtyCountryWithSameName = await _db.Countries.CountAsync(country => country.Name == countryAddRequest.Name);
 
-            if(qtyCountryWithSameName > 1)
+            if(qtyCountryWithSameName > 0)
             {
                 throw new ArgumentException("Given country name already exists");
             }

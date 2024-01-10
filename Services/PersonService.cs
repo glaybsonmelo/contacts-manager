@@ -4,17 +4,17 @@ using Entities;
 using Services.Helpers;
 using ServiceContracts.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Services
 {
     public class PersonService : IPersonsService
     {
-        private readonly PersonsDbContext _db;
-        private readonly ICountriesService _countriesService;
-        public PersonService(PersonsDbContext personsDbContext)
+        private readonly ApplicationDbContext _db;
+
+        public PersonService(ApplicationDbContext personsDbContext)
         {
             _db = personsDbContext;
-            _countriesService = new CountriesService(_db);
         }
 
         public async Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
@@ -40,6 +40,7 @@ namespace Services
         public async Task<List<PersonResponse>> GetAllPersons()
         {
             //return _db.Persons.Select(person => ConvertPersonIntoPersonResponse(person)).ToList();
+
             var persons = await _db.Persons.Include("Country").ToListAsync();
              
             return persons.Select(person => person.ToPersonResponse()).ToList();
@@ -59,6 +60,7 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
+
             List<PersonResponse> allPersons = await GetAllPersons();
             List<PersonResponse> matchingPersons = allPersons;
 
@@ -108,7 +110,8 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string? sortBy, SortOrderOptions sortOrder)
         {
-            if(string.IsNullOrEmpty(sortBy)) 
+
+            if (string.IsNullOrEmpty(sortBy)) 
                 return allPersons;
             List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
             {
