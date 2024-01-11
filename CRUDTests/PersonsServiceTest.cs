@@ -4,8 +4,8 @@ using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using EntityFrameworkCoreMock;
+using AutoFixture;
 
 namespace CRUDTests
 {
@@ -14,11 +14,12 @@ namespace CRUDTests
         private readonly IPersonsService _personsService;
         private readonly ICountriesService _countriesService;
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly IFixture _fixture;
 
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
-
             _testOutputHelper = testOutputHelper;
+            _fixture = new Fixture();
 
             var countriesInitialData = new List<Country>() { };
             var personsInitialData = new List<Person>() { };
@@ -91,16 +92,7 @@ namespace CRUDTests
         public async Task AddPerson_ProperPersonDetails()
         {
             // Arrange
-            PersonAddRequest personAddRequest = new PersonAddRequest()
-            {
-                Name = "Glaybson",
-                Address = "addd",
-                BirthDate = Convert.ToDateTime("07/16/2003"),
-                CountryId = Guid.NewGuid(),
-                Email = "valid@email.com",
-                Gender = GenderOptions.Male,
-                ReceiveNewsLetters = true,
-            };
+            PersonAddRequest personAddRequest = _fixture.Build<PersonAddRequest>().With(person => person.Email, "email@valid.com").Create();
 
             //Act
             PersonResponse person_response_from_add = await _personsService.AddPerson(personAddRequest);
