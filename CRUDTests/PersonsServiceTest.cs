@@ -145,9 +145,7 @@ namespace CRUDTests
 
             PersonResponse? person_response_from_get = await _personsService.GetPersonById(personId);
             //Assert
-            Assert.Equal(person_response_from_add, person_response_from_get);
             person_response_from_add.Should().Be(person_response_from_get);
-
         }
 
         #endregion
