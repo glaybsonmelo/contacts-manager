@@ -13,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IPersonsService, PersonService>();
 
+//Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
@@ -26,6 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+//Rotativa executable (for convert view into pdf)
 Rotativa.AspNetCore.RotativaConfiguration
     .Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
 

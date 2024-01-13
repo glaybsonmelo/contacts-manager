@@ -10,12 +10,12 @@ namespace Entities
 {
     public class ApplicationDbContext : DbContext
     {
+        public virtual DbSet<Country> Countries { get; set;}
+        public virtual DbSet<Person> Persons { get; set;}
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
             
         }
-        public virtual DbSet<Country> Countries { get; set;}
-        public virtual DbSet<Person> Persons { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,7 +51,6 @@ namespace Entities
             modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8");
 
             // Table Relations
-
             modelBuilder.Entity<Person>(entity =>
             {
                 entity.HasOne(c => c.Country)
