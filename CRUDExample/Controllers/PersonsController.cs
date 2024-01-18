@@ -47,7 +47,7 @@ namespace CRUDExample.Controllers
        
         [Route("[action]")]
         [HttpGet]
-        async Task<IActionResult> Create()
+        public async Task<IActionResult> Create()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
             ViewBag.Countries = countries.Select(country => new SelectListItem() { Text = country.Name, Value = country.Id.ToString() }) ;
@@ -58,7 +58,7 @@ namespace CRUDExample.Controllers
 
         [Route("[action]")]
         [HttpPost]
-        async Task<IActionResult> Create(PersonAddRequest personAddRequest)
+        public async Task<IActionResult> Create(PersonAddRequest personAddRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("[action]/{personId}")]
-        async Task<IActionResult> Edit(Guid personId)
+        public async Task<IActionResult> Edit(Guid personId)
         {
             PersonResponse? personToEdit = await _personsService.GetPersonById(personId);
 
@@ -93,7 +93,7 @@ namespace CRUDExample.Controllers
 
         [HttpPost]
         [Route("[action]/{personId}")]
-        async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
+        public async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
         {
             PersonResponse? personFetched = await _personsService.GetPersonById(personUpdateRequest.PersonId);
             
@@ -117,7 +117,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("[action]/{personId}")]
-        async Task<IActionResult> Delete(Guid personId)
+        public async Task<IActionResult> Delete(Guid personId)
         {
             PersonResponse? personFound = await _personsService.GetPersonById(personId);
             
@@ -131,7 +131,7 @@ namespace CRUDExample.Controllers
 
         [HttpPost]
         [Route("[action]/{personId}")]
-        async Task<IActionResult> Delete(PersonResponse personToDelete)
+        public async Task<IActionResult> Delete(PersonResponse personToDelete)
         {
             PersonResponse? personFound = await _personsService.GetPersonById(personToDelete.Id);
 
@@ -147,7 +147,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("PersonsPDF")]
-        async Task<IActionResult> PersonsPDF()
+        public async Task<IActionResult> PersonsPDF()
         {
             List<PersonResponse> persons = await _personsService.GetAllPersons();
                 return new ViewAsPdf("PersonsPDF", persons, ViewData)
