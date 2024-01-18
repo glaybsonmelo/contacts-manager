@@ -1,53 +1,37 @@
 ﻿using Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using RespositoryContracts;
 
-namespace RespositoryContracts
+namespace Repositories
 {
-    /// <summary>
-    /// Represents data acess logic for managing Person entity
-    /// </summary>
-    public interface IPersonsRepository
+    public class CountriesRepository : ICountriesRepository
     {
-        /// <summary>
-        /// Add person object to the data store
-        /// </summary>
-        /// <param name="person">person object to add</param>
-        /// <returns>the Person object after adding it to the table</returns>
-        Task<Person> AddPerson(Person person);
-        /// <summary>
-        /// Returns all persons in the data store
-        /// </summary>
-        /// <returns>List of persons object from table</returns>
-        Task<List<Person>> GetAllPersons();
-        /// <summary>
-        /// It returns an person object based on the given id; otherwise returns null
-        /// </summary>
-        /// <param name="id"> Id (Guid) to search</param>
-        /// <returns> person object or null</returns>
-        Task<Person> GetPersonById(int id);
-        /// <summary>
-        /// returns all persons object based on the given expression
-        /// </summary>
-        /// <param name="predicate">LINQ expression to check</param>
-        /// <returns>All matching persons with the given condition</returns>
-        Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Id">person Id</param>
-        /// <returns>Returns true if deletion is successful; otherwise false</returns>
-        Task<bool> DeletePersonByPersonId(Guid Id);
-        /// <summary>
-        /// Updates a person object (name and other details) based on the given person id
-        /// </summary>
-        /// <param name="person">Person                                                                                      object to update</param>
-        /// <returns>Person object updated</returns>
-        Task<Person> UpdatePerson(Person person);
+        private readonly ApplicationDbContext _db;
+
+        public CountriesRepository(ApplicationDbContext dbContext)
+        {
+            _db = dbContext;
+        }
+        public async Task<Country> AddCountry(Country country)
+        {
+            _db.Countries.Add(country);
+            await _db.SaveChangesAsync();
+            return country;
+        }
+
+        public async Task<List<Country>> GetAllCountries()
+        {
+            return await _db.Countries.ToListAsync();
+        }
+
+        public async Task<Country?> GetCountryById(Guid id)
+        {
+            return await _db.Countries.FindAsync(id);
+        }
+
+        public async Task<Country?> GetCountryByName(string name)
+        {
+            return await _db.Countries.FirstOrDefaultAsync(country => country.Name == name);
+        }
     }
 }

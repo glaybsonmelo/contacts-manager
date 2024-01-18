@@ -23,12 +23,12 @@ namespace RespositoryContracts
         /// </summary>
         /// <param name="id">id of country to search</param>
         /// <returns>Matching Country object ou null</returns>
-        Task<Country> GetCountryById(Guid id);
+        Task<Country?> GetCountryById(Guid id);
         /// <summary>
         /// Returns country based on the given name; otherwise returns null
         /// </summary>
         /// <param name="name">name to search</param>
         /// <returns>Matching country or null</returns>
-        Task<Country> GetCountryByName(string name);
+        Task<Country?> GetCountryByName(string name);
     }
 }
