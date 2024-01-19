@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Repositories
 {
-    internal class PersonsRepository : IPersonsRepository
+    public class PersonsRepository : IPersonsRepository
     {
         private readonly ApplicationDbContext _db;
 
