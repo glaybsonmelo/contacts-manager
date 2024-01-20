@@ -9,7 +9,6 @@ namespace ServiceContracts.DTO
     /// </summary>
     public class PersonAddRequest
     {
-
         [Required(ErrorMessage = "{0} cann't be blank")]
         [MinLength(2, ErrorMessage = "Min length is {1}")]
         public string? Name { get; set; }
@@ -37,6 +36,7 @@ namespace ServiceContracts.DTO
         {
             return new Person()
             {
+                Id = Guid.NewGuid(),
                 Name = Name,
                 Email = Email,
                 BirthDate = BirthDate,

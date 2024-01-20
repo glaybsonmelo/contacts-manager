@@ -32,7 +32,9 @@ namespace Services
 
             person.Id = Guid.NewGuid();
 
-            return (await _personsRepository.AddPerson(person)).ToPersonResponse();
+            Person ps = await _personsRepository.AddPerson(person);
+
+            return ps.ToPersonResponse();
 
         }
 
