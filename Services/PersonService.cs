@@ -3,8 +3,6 @@ using ServiceContracts.DTO;
 using Entities;
 using Services.Helpers;
 using ServiceContracts.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using RespositoryContracts;
 
 namespace Services

@@ -15,7 +15,9 @@ namespace Services
         }
         public async Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest)
         {
-            if(countryAddRequest == null)
+           // throw new ArgumentNullException(nameof(countryAddRequest));
+
+            if (countryAddRequest == null)
             {
                 throw new ArgumentNullException(nameof(countryAddRequest));
             }
@@ -23,8 +25,6 @@ namespace Services
             {
                 throw new ArgumentException(nameof(countryAddRequest.Name));
             }
-
-
 
             if(await _countriesRepository.GetCountryByName(countryAddRequest.Name) != null)
             {
