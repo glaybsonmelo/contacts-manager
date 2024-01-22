@@ -201,6 +201,25 @@ namespace CRUDTests
             redirectResult.ControllerName.Should().Be("Persons");
         }
         #endregion
+        [Fact]
+        public async Task Delete_IfValidPersonId_ToReturnViewIndex()
+        {
+            //Arrange
 
+            PersonResponse? person_response = _fixture.Build<PersonResponse>()
+                .With(person => person.Gender, GenderOptions.Female.ToString())
+                .Create();
+
+            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+
+            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+            _personsServiceMock.Setup(temp => temp.DeletePerson(It.IsAny<Guid>())).ReturnsAsync(true);
+            //Act
+            IActionResult result = await personsController.Delete(person_response);
+            //Assert
+            RedirectToActionResult redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            redirectResult.ActionName.Should().Be("Index");
+            redirectResult.ControllerName.Should().Be("Persons");
+        }
     }
 }
