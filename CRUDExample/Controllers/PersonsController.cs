@@ -61,10 +61,12 @@ namespace CRUDExample.Controllers
             if (!ModelState.IsValid)
             {
                 List<CountryResponse> countries = await _countriesService.GetAllCountries();
-                ViewBag.Countries = countries;
+                ViewBag.Countries = countries.Select(country => new SelectListItem() { Text = country.Name, Value = country.Id.ToString() });
+
                 ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return View();
+                return View(personAddRequest);
             }
+
             await _personsService.AddPerson(personAddRequest);
 
             return RedirectToAction("index", "Persons");
