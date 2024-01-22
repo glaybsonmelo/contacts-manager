@@ -2,17 +2,11 @@
 using Moq;
 using ServiceContracts;
 using ServiceContracts.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using CRUDExample.Controllers;
 using ServiceContracts.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Entities;
+
 namespace CRUDTests
 {
     public class PersonsControllerTest 
@@ -36,7 +30,7 @@ namespace CRUDTests
         }
         #region Index
         [Fact]
-        public async Task Index_ShouldReturnIndexViewWithPersonsList()
+        public async Task Index_ToReturnIndexViewWithPersonsList()
         {
             
             List<PersonResponse> person_response_list = _fixture.Create<List<PersonResponse>>();
@@ -108,6 +102,27 @@ namespace CRUDTests
           
             RedirectToActionResult redirectResult = Assert.IsType<RedirectToActionResult>(result);
             redirectResult.ActionName.Should().Be("Index");
+        }
+        #endregion
+        #region Edit
+        [Fact]
+        public async Task Edit_IfInvalidPersonId_ToReturnIndexView()
+        {
+            //Arrange
+            PersonResponse? person_response = null;
+            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+
+            Guid randomPersonId = Guid.NewGuid();
+
+            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+
+            //Act
+            IActionResult result = await personsController.Edit(randomPersonId);
+
+            //Assert
+            RedirectToActionResult redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            redirectResult.ActionName.Should().Be("Index");
+            redirectResult.ControllerName.Should().Be("Persons");
         }
         #endregion
 

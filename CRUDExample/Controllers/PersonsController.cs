@@ -69,7 +69,7 @@ namespace CRUDExample.Controllers
 
             await _personsService.AddPerson(personAddRequest);
 
-            return RedirectToAction("index", "Persons");
+            return RedirectToAction("Index", "Persons");
         }
 
         [HttpGet]
@@ -80,7 +80,7 @@ namespace CRUDExample.Controllers
 
             if(personToEdit == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Persons");
             }
             PersonUpdateRequest personUpdateRequest = personToEdit.ToPersonUpdateRequest();
 
