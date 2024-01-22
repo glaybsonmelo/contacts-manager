@@ -104,25 +104,52 @@ namespace CRUDTests
             redirectResult.ActionName.Should().Be("Index");
         }
         #endregion
+
         #region Edit
         [Fact]
         public async Task Edit_IfInvalidPersonId_ToReturnIndexView()
         {
             //Arrange
+            PersonUpdateRequest person_update_request = _fixture.Create<PersonUpdateRequest>();
             PersonResponse? person_response = null;
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
 
-            Guid randomPersonId = Guid.NewGuid();
+            PersonsController personsController = new PersonsController(_personsService, _countriesService);
 
             _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
 
             //Act
-            IActionResult result = await personsController.Edit(randomPersonId);
+            IActionResult result = await personsController.Edit(person_update_request);
 
             //Assert
             RedirectToActionResult redirectResult = Assert.IsType<RedirectToActionResult>(result);
             redirectResult.ActionName.Should().Be("Index");
             redirectResult.ControllerName.Should().Be("Persons");
+        }
+        [Fact]
+        public async Task Edit_IfModelValidationErrors_ToReturnEditView()
+        {
+            //Arrange
+            PersonResponse? person_response = _fixture.Build<PersonResponse>()
+                .With(person => person.Gender, GenderOptions.Male.ToString())
+                .Create();
+            PersonUpdateRequest person_update_request = person_response.ToPersonUpdateRequest();
+
+            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+
+            List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
+
+            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+            _countriesServiceMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
+
+            //Act
+            personsController.ModelState.AddModelError("Name", "Name can't be blank");
+            IActionResult result = await personsController.Edit(person_update_request);
+
+            //Assert
+            ViewResult viewResult = Assert.IsType<ViewResult>(result);
+
+            viewResult.Model.Should().BeAssignableTo<PersonUpdateRequest>();
+            viewResult.Model.Should().BeEquivalentTo(person_update_request);
         }
         #endregion
 
