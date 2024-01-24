@@ -200,7 +200,6 @@ namespace CRUDTests
             redirectResult.ActionName.Should().Be("Index");
             redirectResult.ControllerName.Should().Be("Persons");
         }
-        #endregion
         [Fact]
         public async Task Delete_IfValidPersonId_ToReturnViewIndex()
         {
@@ -221,5 +220,6 @@ namespace CRUDTests
             redirectResult.ActionName.Should().Be("Index");
             redirectResult.ControllerName.Should().Be("Persons");
         }
+        #endregion
     }
 }

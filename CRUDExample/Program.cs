@@ -33,12 +33,16 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-//Rotativa executable (for convert view into pdf)
-Rotativa.AspNetCore.RotativaConfiguration
-    .Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+if (app.Environment.IsEnvironment("Test") == false) {
+    //Rotativa executable (for convert view into pdf)
+    Rotativa.AspNetCore.RotativaConfiguration
+        .Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+}
 
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { } // Make the auto-generated program accessible programmatically
