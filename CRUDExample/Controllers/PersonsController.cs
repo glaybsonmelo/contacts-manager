@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CRUDExample.Filters.ActionFilters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using ServiceContracts;
@@ -20,25 +21,12 @@ namespace CRUDExample.Controllers
         }
         [Route("[action]")]
         [Route("/")]
+        [TypeFilter(typeof(PersonsListActionFilter))]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
-            ViewBag.SearchFields = new Dictionary<string, string>(){
-                { nameof(PersonResponse.Name), "Person Name" },
-                { nameof(PersonResponse.Email), "Email" },
-                { nameof(PersonResponse.Address), "Address" },
-                { nameof(PersonResponse.BirthDate), "Birth Date" },
-                { nameof(PersonResponse.Gender), "Gender" },
-                { nameof(PersonResponse.Country), "Country" },
-            };
-            ViewBag.CurrentSearchBy = searchBy;
-            ViewBag.CurrentSearchString = searchString;
 
             List<PersonResponse> persons = await _personsService.GetFilteredPersons(searchBy, searchString);
-
             List<PersonResponse> sortedPersons = await _personsService.GetSortedPersons(persons, sortBy, sortOrder);
-         
-            ViewBag.CurrentSortBy = sortBy;
-            ViewBag.CurrentSortOrder = sortOrder;
 
             return View(sortedPersons);
         }
