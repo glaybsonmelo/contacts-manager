@@ -1,4 +1,8 @@
 ﻿using CRUDExample.Filters.ActionFilters;
+using CRUDExample.Filters.AuthorizationFilter;
+using CRUDExample.Filters.ResourceFilters;
+using CRUDExample.Filters.ResultFilter;
+using CRUDExample.Filters.ResultFilters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
@@ -21,7 +25,9 @@ namespace CRUDExample.Controllers
         }
         [Route("[action]")]
         [Route("/")]
+        [HttpGet]
         [TypeFilter(typeof(PersonsListActionFilter))]
+        [TypeFilter(typeof(PersonsListResultFilter))]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
 
@@ -33,6 +39,7 @@ namespace CRUDExample.Controllers
        
         [Route("[action]")]
         [HttpGet]
+        [TypeFilter(typeof(FeatureDisabledResourceFilter), Arguments = new object[] { false })]
         [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom_Key", "My-Custom-Value", 1 })]
         public async Task<IActionResult> Create()
         {
@@ -45,7 +52,7 @@ namespace CRUDExample.Controllers
 
         [Route("[action]")]
         [HttpPost]
-        [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]   
         public async Task<IActionResult> Create(PersonAddRequest personRequest)
         {
             await _personsService.AddPerson(personRequest);
@@ -55,6 +62,7 @@ namespace CRUDExample.Controllers
 
         [HttpGet]
         [Route("[action]/{personId}")]
+        [TypeFilter(typeof(TokenResultFilter))]
         public async Task<IActionResult> Edit(Guid personId)
         {
             PersonResponse? personToEdit = await _personsService.GetPersonById(personId);
@@ -74,6 +82,7 @@ namespace CRUDExample.Controllers
 
         [HttpPost]
         [Route("[action]/{personId}")]
+        [TypeFilter(typeof(TokenAuthorizationFilter))]
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
