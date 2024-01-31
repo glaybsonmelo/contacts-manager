@@ -1,5 +1,6 @@
 ﻿using CRUDExample.Filters.ActionFilters;
 using CRUDExample.Filters.AuthorizationFilter;
+using CRUDExample.Filters.ExceptionFilters;
 using CRUDExample.Filters.ResourceFilters;
 using CRUDExample.Filters.ResultFilter;
 using CRUDExample.Filters.ResultFilters;
@@ -13,6 +14,7 @@ using ServiceContracts.Enums;
 namespace CRUDExample.Controllers
 {
     [Route("[controller]")]
+    [TypeFilter(typeof(HandleExceptionFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
