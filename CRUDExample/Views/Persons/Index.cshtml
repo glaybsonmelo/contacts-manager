@@ -15,6 +15,7 @@
             <a asp-controller="Persons" asp-action="PersonsPDF" class="button-link button-blue-back ml">Download as PDF</a>
          </div>
     </div>
+
     <div class="table-container">
         <div class="flex">
             <div class="flex-1">
@@ -31,7 +32,6 @@
 
                         }
                         <option value="@field.Key"> @field.Value</option>
-
                     }
                 </select>
                 <input name="searchString" type="search" id="Search" class="search-button" placeholder="Search" value="@ViewBag.CurrentSearchString" />
@@ -108,8 +108,8 @@
                     <td style="width: 15%">@person.Address</td>
                     <td style="width: 8%">@person.ReceiveNewsLetters</td>
                     <td style="width: 20%">
-                        <a asp-controller="Persons" asp-action="Edit" asp-route-PersonId="@person.Id">Edit</a>
-                        <a asp-controller="Persons" asp-action="Delete" asp-route-PersonId="@person.Id">Delete</a>
+                        <a class="button-link button-blue-back" asp-controller="Persons" asp-action="Edit" asp-route-PersonId="@person.Id">Edit</a>
+                        <a class="button-link button-red-back" asp-controller="Persons" asp-action="Delete" asp-route-PersonId="@person.Id">Delete</a>
                     </td>
                 </tr>
 
