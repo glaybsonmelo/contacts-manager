@@ -4,27 +4,11 @@ using RespositoryContracts;
 using ServiceContracts;
 using Services;
 using Repositories;
+using CRUDExample;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddControllersWithViews();
-
-//add services into IoC container
-
-builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
-builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
-
-builder.Services.AddScoped<ICountriesService, CountriesService>();
-builder.Services.AddScoped<IPersonsService, PersonService>();
-
-
-//Database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
-    }
-);
+builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
