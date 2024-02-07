@@ -14,7 +14,7 @@ using ServiceContracts.Enums;
 namespace CRUDExample.Controllers
 {
     [Route("[controller]")]
-    [TypeFilter(typeof(HandleExceptionFilter))]
+   // [TypeFilter(typeof(HandleExceptionFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
@@ -28,8 +28,7 @@ namespace CRUDExample.Controllers
         [Route("[action]")]
         [Route("/")]
         [HttpGet]
-        [TypeFilter(typeof(PersonsListActionFilter))]
-        [TypeFilter(typeof(PersonsListResultFilter))]
+        [PersonsListActionFilter]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
 
@@ -42,7 +41,7 @@ namespace CRUDExample.Controllers
         [Route("[action]")]
         [HttpGet]
         [TypeFilter(typeof(FeatureDisabledResourceFilter), Arguments = new object[] { false })]
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom_Key", "My-Custom-Value", 1 })]
+        [ResponseHeaderFilterFactory("X-Custom_Key", "My-Custom-Value", 1)]
         public async Task<IActionResult> Create()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
@@ -94,7 +93,6 @@ namespace CRUDExample.Controllers
             {
                 return RedirectToAction("Index", "Persons");
             }
-
             PersonResponse updatedPerson = await _personsService.UpdatePerson(personRequest);
 
             return RedirectToAction("Index", "Persons");

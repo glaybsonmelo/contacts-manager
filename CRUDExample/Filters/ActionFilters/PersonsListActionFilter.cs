@@ -5,9 +5,36 @@ using ServiceContracts.Enums;
 
 namespace CRUDExample.Filters.ActionFilters
 {
-    public class PersonsListActionFilter : IActionFilter
+    public class PersonsListActionFilter : ActionFilterAttribute
     {
-        public void OnActionExecuted(ActionExecutedContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            context.HttpContext.Items["arguments"] = context.ActionArguments;
+
+            if (context.ActionArguments.ContainsKey("searchBy"))
+            {
+                string? searchBy = Convert.ToString(context.ActionArguments["searchBy"]);
+
+                if (!string.IsNullOrEmpty(searchBy))
+                {
+                    var searchByOptions = new List<string>() {
+                        nameof(PersonResponse.Name),
+                        nameof(PersonResponse.Email),
+                        nameof(PersonResponse.BirthDate),
+                        nameof(PersonResponse.Country),
+                        nameof(PersonResponse.Gender),
+                        nameof(PersonResponse.Address),
+                    };
+                    if (searchByOptions.Any(temp => temp == searchBy) == false)
+                    {
+                        ;
+                        context.ActionArguments["searchBy"] = nameof(PersonResponse.Name);
+                    }
+                }
+            }
+
+        }
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
             PersonsController personsController = (PersonsController) context.Controller;
             IDictionary<string, object?>? parameters = (IDictionary<string, object?>?) context.HttpContext.Items["arguments"];
@@ -17,17 +44,31 @@ namespace CRUDExample.Filters.ActionFilters
                 {
                     personsController.ViewBag.CurrentSearchBy = Convert.ToString(parameters["searchBy"]);
                 }
+                else
+                {
+                    personsController.ViewBag.CurrentSearchBy = nameof(PersonResponse.Name);
+
+                }
                 if (parameters.ContainsKey("searchString"))
                 {
                     personsController.ViewBag.CurrentSearchString = Convert.ToString(parameters["searchString"]);
                 }
+               
                 if (parameters.ContainsKey("sortBy"))
                 {
                     personsController.ViewBag.CurrentSortBy = Convert.ToString(parameters["sortBy"]);
                 }
+                else
+                {
+                    personsController.ViewBag.CurrentSortBy = nameof(PersonResponse.Name);
+                }
                 if (parameters.ContainsKey("sortOrder"))
                 {
                     personsController.ViewBag.CurrentSortOrder = (SortOrderOptions) parameters["sortOrder"];
+                }
+                else
+                {
+                    personsController.ViewBag.CurrentSortOrder = SortOrderOptions.ASC;
                 }
             }
             personsController.ViewBag.SearchFields = new Dictionary<string, string>(){
@@ -40,31 +81,6 @@ namespace CRUDExample.Filters.ActionFilters
             };
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
-        {
-            context.HttpContext.Items["arguments"] = context.ActionArguments;
 
-            if (context.ActionArguments.ContainsKey("searchBy"))
-            {
-              string? searchBy = Convert.ToString(context.ActionArguments["searchBy"]);
-
-                if (!string.IsNullOrEmpty(searchBy))
-                {
-                    var searchByOptions = new List<string>() { 
-                        nameof(PersonResponse.Name),
-                        nameof(PersonResponse.Email),
-                        nameof(PersonResponse.BirthDate),
-                        nameof(PersonResponse.Country),
-                        nameof(PersonResponse.Gender),
-                        nameof(PersonResponse.Address),
-                    };
-                    if (searchByOptions.Any(temp => temp == searchBy) == false)
-                    {;
-                        context.ActionArguments["searchBy"] = nameof(PersonResponse.Name);
-                    }
-                }
-            }
-
-        }
     }
 }
