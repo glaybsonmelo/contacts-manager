@@ -14,15 +14,29 @@ using ServiceContracts.Enums;
 namespace CRUDExample.Controllers
 {
     [Route("[controller]")]
-   // [TypeFilter(typeof(HandleExceptionFilter))]
     public class PersonsController : Controller
     {
-        private readonly IPersonsService _personsService;
-        private readonly ICountriesService _countriesService;
+        ICountriesService _countriesService;
+        private readonly IPersonsAdderService _personsAdderService;
+        private readonly IPersonsDeleterService _personsDeleterService;
+        private readonly IPersonsGetterService _personsGetterService;
+        private readonly IPersonsSorterService _personsSorterService;
+        private readonly IPersonsUpdaterService _personsUpdaterService;
 
-        public PersonsController(IPersonsService personsService, ICountriesService countriesService)
+        public PersonsController(
+            ICountriesService countriesService,
+            IPersonsAdderService personsAdderService,
+            IPersonsDeleterService personsDeleterService,
+            IPersonsGetterService personsGetterService,
+            IPersonsSorterService personsSorterService,
+            IPersonsUpdaterService personsUpdaterService
+            )
         {
-            _personsService = personsService;
+            _personsAdderService = personsAdderService;
+            _personsDeleterService = personsDeleterService;
+            _personsGetterService = personsGetterService;
+            _personsSorterService = personsSorterService;
+            _personsUpdaterService = personsUpdaterService;
             _countriesService = countriesService;
         }
         [Route("[action]")]
@@ -32,8 +46,8 @@ namespace CRUDExample.Controllers
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.Name), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
 
-            List<PersonResponse> persons = await _personsService.GetFilteredPersons(searchBy, searchString);
-            List<PersonResponse> sortedPersons = await _personsService.GetSortedPersons(persons, sortBy, sortOrder);
+            List<PersonResponse> persons = await _personsGetterService.GetFilteredPersons(searchBy, searchString);
+            List<PersonResponse> sortedPersons = await _personsSorterService.GetSortedPersons(persons, sortBy, sortOrder);
 
             return View(sortedPersons);
         }
@@ -56,7 +70,7 @@ namespace CRUDExample.Controllers
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]   
         public async Task<IActionResult> Create(PersonAddRequest personRequest)
         {
-            await _personsService.AddPerson(personRequest);
+            await _personsAdderService.AddPerson(personRequest);
 
             return RedirectToAction("Index", "Persons");
         }
@@ -66,7 +80,7 @@ namespace CRUDExample.Controllers
         [TypeFilter(typeof(TokenResultFilter))]
         public async Task<IActionResult> Edit(Guid personId)
         {
-            PersonResponse? personToEdit = await _personsService.GetPersonById(personId);
+            PersonResponse? personToEdit = await _personsGetterService.GetPersonById(personId);
 
             if(personToEdit == null)
             {
@@ -87,22 +101,22 @@ namespace CRUDExample.Controllers
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
-            PersonResponse? personFetched = await _personsService.GetPersonById(personRequest.PersonId);
+            PersonResponse? personFetched = await _personsGetterService.GetPersonById(personRequest.PersonId);
             
             if (personFetched == null)
             {
                 return RedirectToAction("Index", "Persons");
             }
-            PersonResponse updatedPerson = await _personsService.UpdatePerson(personRequest);
+            PersonResponse updatedPerson = await _personsUpdaterService.UpdatePerson(personRequest);
 
             return RedirectToAction("Index", "Persons");
         }
 
         [HttpGet]
-        [Route("[action]/{personId}")]
+        [Route("[action]/{personId}")] 
         public async Task<IActionResult> Delete(Guid personId)
         {
-            PersonResponse? personFound = await _personsService.GetPersonById(personId);
+            PersonResponse? personFound = await _personsGetterService.GetPersonById(personId);
             
             if (personFound == null)
             {
@@ -116,14 +130,14 @@ namespace CRUDExample.Controllers
         [Route("[action]/{personId}")]
         public async Task<IActionResult> Delete(PersonResponse personToDelete)
         {
-            PersonResponse? personFound = await _personsService.GetPersonById(personToDelete.Id);
+            PersonResponse? personFound = await _personsGetterService.GetPersonById(personToDelete.Id);
 
             if(personFound == null)
             {
                 return RedirectToAction("Index", "Persons");
             }
             
-            await _personsService.DeletePerson(personToDelete.Id);
+            await _personsDeleterService.DeletePerson(personToDelete.Id);
 
             return RedirectToAction("Index", "Persons");
         }
@@ -132,7 +146,7 @@ namespace CRUDExample.Controllers
         [Route("PersonsPDF")]
         public async Task<IActionResult> PersonsPDF()
         {
-            List<PersonResponse> persons = await _personsService.GetAllPersons();
+            List<PersonResponse> persons = await _personsGetterService.GetAllPersons();
                 return new ViewAsPdf("PersonsPDF", persons, ViewData)
                 {
                     PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
