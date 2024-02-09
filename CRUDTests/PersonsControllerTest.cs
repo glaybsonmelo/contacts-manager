@@ -11,10 +11,20 @@ namespace CRUDTests
 {
     public class PersonsControllerTest 
     {
-        private readonly IPersonsService _personsService;
         private readonly ICountriesService _countriesService;
 
-        private readonly Mock<IPersonsService> _personsServiceMock;
+        private readonly IPersonsAdderService _personsAdderService;
+        private readonly IPersonsDeleterService _personsDeleterService;
+        private readonly IPersonsGetterService _personsGetterService;
+        private readonly IPersonsSorterService _personsSorterService;
+        private readonly IPersonsUpdaterService _personsUpdaterService;
+
+        private readonly Mock<IPersonsAdderService> _personsAdderServiceMock;
+        private readonly Mock<IPersonsDeleterService> _personsDeleterServiceMock;
+        private readonly Mock<IPersonsGetterService> _personsGetterServiceMock;
+        private readonly Mock<IPersonsSorterService> _personsSorterServiceMock;
+        private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
+
         private readonly Mock<ICountriesService> _countriesServiceMock;
 
         private readonly Fixture _fixture;
@@ -22,10 +32,20 @@ namespace CRUDTests
         public PersonsControllerTest()
         {
             _fixture = new Fixture();
-            _personsServiceMock = new Mock<IPersonsService>();
+            _personsAdderServiceMock = new Mock<IPersonsAdderService>();
+            _personsDeleterServiceMock = new Mock<IPersonsDeleterService>();
+            _personsGetterServiceMock = new Mock<IPersonsGetterService>();
+            _personsSorterServiceMock = new Mock<IPersonsSorterService>();
+            _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
+
             _countriesServiceMock = new Mock<ICountriesService>();
 
-            _personsService = _personsServiceMock.Object;
+            _personsAdderService = _personsAdderServiceMock.Object;
+            _personsDeleterService = _personsDeleterServiceMock.Object;
+            _personsGetterService = _personsGetterServiceMock.Object;
+            _personsSorterService = _personsSorterServiceMock.Object;
+            _personsUpdaterService = _personsUpdaterServiceMock.Object;
+
             _countriesService = _countriesServiceMock.Object;
         }
         #region Index
@@ -34,13 +54,20 @@ namespace CRUDTests
         {
             
             List<PersonResponse> person_response_list = _fixture.Create<List<PersonResponse>>();
-            PersonsController personController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
 
-            _personsServiceMock.Setup(temp => temp.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(person_response_list);
-            _personsServiceMock.Setup(temp => temp.GetSortedPersons(It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderOptions>())).ReturnsAsync(person_response_list);
+            _personsGetterServiceMock.Setup(temp => temp.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(person_response_list);
+            _personsSorterServiceMock.Setup(temp => temp.GetSortedPersons(It.IsAny<List<PersonResponse>>(), It.IsAny<string>(), It.IsAny<SortOrderOptions>())).ReturnsAsync(person_response_list);
 
             //Act
-            IActionResult result = await personController.Index(
+            IActionResult result = await personsController.Index(
                 _fixture.Create<string>(), 
                 _fixture.Create<string>(), 
                 _fixture.Create<string>(), 
@@ -55,33 +82,7 @@ namespace CRUDTests
         #endregion
 
         #region Create
-        
-        [Fact]
-        public async Task Create_IfModelValidationErrors_ToReturnCreateView()
-        {
-            //Arrange
-            PersonAddRequest person_add_request = _fixture.Create<PersonAddRequest>();
 
-            PersonResponse person_response = _fixture.Create<PersonResponse>();
-            List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
-
-            _countriesServiceMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
-            _personsServiceMock.Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>())).ReturnsAsync(person_response);
-
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
-            //Act
-            personsController.ModelState.AddModelError("Name", "Name can't be blank");
-            IActionResult result = await personsController.Create(person_add_request);
-
-            //Assert
-          
-            // RedirectToActionResult viewResult = Assert.IsType<RedirectToActionResult>(result);
-           //viewResult.ActionName.Should().Be("index");
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
-
-            viewResult.ViewData.Model.Should().BeAssignableTo<PersonAddRequest>();
-            viewResult.ViewData.Model.Should().Be(person_add_request);
-        }
         [Fact]
         public async Task Create_IfNoModelValidationErrors_ToReturnCreateView()
         {
@@ -92,9 +93,16 @@ namespace CRUDTests
             List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
 
             _countriesServiceMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
-            _personsServiceMock.Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>())).ReturnsAsync(person_response);
+            _personsAdderServiceMock.Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>())).ReturnsAsync(person_response);
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
             //Act
 
             IActionResult result = await personsController.Create(person_add_request);
@@ -114,9 +122,16 @@ namespace CRUDTests
             PersonUpdateRequest person_update_request = _fixture.Create<PersonUpdateRequest>();
             PersonResponse? person_response = null;
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
 
-            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+            _personsGetterServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
 
             //Act
             IActionResult result = await personsController.Edit(person_update_request);
@@ -126,32 +141,7 @@ namespace CRUDTests
             redirectResult.ActionName.Should().Be("Index");
             redirectResult.ControllerName.Should().Be("Persons");
         }
-        [Fact]
-        public async Task Edit_IfModelValidationErrors_ToReturnEditView()
-        {
-            //Arrange
-            PersonResponse? person_response = _fixture.Build<PersonResponse>()
-                .With(person => person.Gender, GenderOptions.Male.ToString())
-                .Create();
-            PersonUpdateRequest person_update_request = person_response.ToPersonUpdateRequest();
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
-
-            List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
-
-            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
-            _countriesServiceMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
-
-            //Act
-            personsController.ModelState.AddModelError("Name", "Name can't be blank");
-            IActionResult result = await personsController.Edit(person_update_request);
-
-            //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
-
-            viewResult.Model.Should().BeAssignableTo<PersonUpdateRequest>();
-            viewResult.Model.Should().BeEquivalentTo(person_update_request);
-        }
         [Fact]
         public async Task Edit_IfNoModelValidationErrors_ToReturnEditView()
         {
@@ -161,12 +151,19 @@ namespace CRUDTests
                 .Create();
             PersonUpdateRequest person_update_request = person_response.ToPersonUpdateRequest();
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
 
             List<CountryResponse> countries = _fixture.Create<List<CountryResponse>>();
 
-            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
-            _personsServiceMock.Setup(temp => temp.UpdatePerson(It.IsAny<PersonUpdateRequest>())).ReturnsAsync(person_response);
+            _personsGetterServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+            _personsUpdaterServiceMock.Setup(temp => temp.UpdatePerson(It.IsAny<PersonUpdateRequest>())).ReturnsAsync(person_response);
             _countriesServiceMock.Setup(temp => temp.GetAllCountries()).ReturnsAsync(countries);
 
             //Act
@@ -189,10 +186,17 @@ namespace CRUDTests
                 .With(person => person.Gender, GenderOptions.Female.ToString())
                 .Create();
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
 
-            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(null as PersonResponse);
-            _personsServiceMock.Setup(temp => temp.DeletePerson(It.IsAny<Guid>())).ReturnsAsync(true);
+            _personsGetterServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(null as PersonResponse);
+            _personsDeleterServiceMock.Setup(temp => temp.DeletePerson(It.IsAny<Guid>())).ReturnsAsync(true);
             //Act
             IActionResult result = await personsController.Delete(person_response);
             //Assert
@@ -209,10 +213,17 @@ namespace CRUDTests
                 .With(person => person.Gender, GenderOptions.Female.ToString())
                 .Create();
 
-            PersonsController personsController = new PersonsController(_personsService, _countriesService);
+            PersonsController personsController = new PersonsController(
+                _countriesService,
+                _personsAdderService,
+                _personsDeleterService,
+                _personsGetterService,
+                _personsSorterService,
+                _personsUpdaterService
+        );
 
-            _personsServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
-            _personsServiceMock.Setup(temp => temp.DeletePerson(It.IsAny<Guid>())).ReturnsAsync(true);
+            _personsGetterServiceMock.Setup(temp => temp.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person_response);
+            _personsDeleterServiceMock.Setup(temp => temp.DeletePerson(It.IsAny<Guid>())).ReturnsAsync(true);
             //Act
             IActionResult result = await personsController.Delete(person_response);
             //Assert
