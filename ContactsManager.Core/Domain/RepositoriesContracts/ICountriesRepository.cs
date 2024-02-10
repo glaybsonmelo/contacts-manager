@@ -1,4 +1,4 @@
-﻿using ContactsManager.Core.Domain.Entities;
+﻿using Entities;
 
 namespace RespositoryContracts
 {

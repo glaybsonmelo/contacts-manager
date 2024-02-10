@@ -2,7 +2,6 @@
 using ServiceContracts.DTO;
 using Entities;
 using RespositoryContracts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {

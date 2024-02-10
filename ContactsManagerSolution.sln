@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactsManager.UI", "ContactsManager.UI\ContactsManager.UI.csproj", "{74824944-779B-4E6C-81C3-599EC4F7D8EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManager.UI", "ContactsManager.UI\ContactsManager.UI.csproj", "{74824944-779B-4E6C-81C3-599EC4F7D8EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C89FC797-F76B-4662-B179-F9AD63698D7A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{98218BCA-6A6F-4C12-845B-15E609C0CA96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactsManager.Core", "ContactsManager.Core\ContactsManager.Core.csproj", "{FEEC20FB-110E-429D-A48B-72FA673C94B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManager.Core", "ContactsManager.Core\ContactsManager.Core.csproj", "{FEEC20FB-110E-429D-A48B-72FA673C94B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactsManager.Infrastructure", "ContactsManager.Infrastructure\ContactsManager.Infrastructure.csproj", "{9F4459F5-4436-4C36-B485-D15BBCE7B168}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{FEEC20FB-110E-429D-A48B-72FA673C94B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEEC20FB-110E-429D-A48B-72FA673C94B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEEC20FB-110E-429D-A48B-72FA673C94B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F4459F5-4436-4C36-B485-D15BBCE7B168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4459F5-4436-4C36-B485-D15BBCE7B168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F4459F5-4436-4C36-B485-D15BBCE7B168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4459F5-4436-4C36-B485-D15BBCE7B168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{74824944-779B-4E6C-81C3-599EC4F7D8EF} = {C89FC797-F76B-4662-B179-F9AD63698D7A}
 		{FEEC20FB-110E-429D-A48B-72FA673C94B4} = {C89FC797-F76B-4662-B179-F9AD63698D7A}
+		{9F4459F5-4436-4C36-B485-D15BBCE7B168} = {C89FC797-F76B-4662-B179-F9AD63698D7A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BD427C4-610E-48DF-A461-28CACDAFE3D7}
